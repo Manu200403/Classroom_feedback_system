@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Classroom Feedback System</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Real-Time Classroom Feedback</h1>
+            <p>Enhance teaching effectiveness with instant student feedback</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('teacher')">👩‍🏫 Teacher Dashboard</button>
+            <button class="tab-button" onclick="switchTab('student')">👨‍🎓 Student Feedback</button>
+            <button class="tab-button" onclick="switchTab('analytics')">📊 Analytics</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- Teacher Dashboard -->
+            <div id="teacher" class="tab-pane active">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>🚀 Create New Session</h3>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" class="form-control" placeholder="e.g., Mathematics, Physics">
+                        </div>
+                        <div class="form-group">
+                            <label for="teacher">Teacher Name</label>
+                            <input type="text" id="teacher" class="form-control" placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="topic">Today's Topic</label>
+                            <input type="text" id="topic" class="form-control" placeholder="e.g., Quadratic Equations">
+                        </div>
+                        <button class="btn btn-primary" onclick="startSession()">Start Feedback Session</button>
+                    </div>
+
+                    <div class="card">
+                        <h3>📱 QR Code</h3>
+                        <div id="qrDisplay" class="qr-display">
+                            <div class="empty-state">
+                                <div class="emoji">📱</div>
+                                <p>Click "Start Feedback Session" to generate QR code</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="activeSession" style="display: none;">
+                    <div class="session-info">
+                        <h4>Active Session</h4>
+                        <div class="session-id" id="sessionId"></div>
+                        <p id="sessionDetails"></p>
+                    </div>
+
+                    <div class="live-indicator">
+                        <div class="live-dot"></div>
+                        Live Feedback
+                    </div>
+
+                    <div class="charts-container">
+                        <div class="chart-card">
+                            <h4>📊 Understanding Levels</h4>
+                            <canvas id="pieChart" width="300" height="300"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h4>📈 Response Timeline</h4>
+                            <canvas id="timelineChart" width="300" height="300"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalResponses">0</div>
+                            <div class="stat-label">Total Responses</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="avgRating">0</div>
+                            <div class="stat-label">Avg Understanding</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="responseRate">0%</div>
+                            <div class="stat-label">Response Rate</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top: 30px;">
+                        <h3>💬 Recent Comments</h3>
+                        <div id="feedbackList" class="feedback-list">
+                            <div class="empty-state">
+                                <div class="emoji">💭</div>
+                                <p>No feedback received yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn btn-success" onclick="exportFeedback()">📥 Export Results</button>
+                        <button class="btn btn-primary" onclick="endSession()" style="margin-left: 10px;">⏹️ End Session</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Feedback -->
+            <div id="student" class="tab-pane">
+                <div class="feedback-form">
+                    <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">📝 Share Your Feedback</h2>
+                    
+                    <div class="form-group">
+                        <label for="sessionInput">Session ID (or scan QR code)</label>
+                        <input type="text" id="sessionInput" class="form-control" placeholder="Enter session ID">
+                    </div>
+
+                    <div id="feedbackSection" style="display: none;">
+                        <div class="form-group">
+                            <label>How well did you understand today's topic?</label>
+                            <div class="rating-options">
+                                <div class="rating-option" data-rating="5">
+                                    <span class="emoji">😍</span>
+                                    <div class="label">Perfectly Clear</div>
+                                </div>
+                                <div class="rating-option" data-rating="4">
+                                    <span class="emoji">😊</span>
+                                    <div class="label">Well Understood</div>
+                                </div>
+                                <div class="rating-option" data-rating="3">
+                                    <span class="emoji">🙂</span>
+                                    <div class="label">Partially Clear</div>
+                                </div>
+                                <div class="rating-option" data-rating="2">
+                                    <span class="emoji">😕</span>
+                                    <div class="label">Somewhat Confused</div>
+                                </div>
+                                <div class="rating-option" data-rating="1">
+                                    <span class="emoji">😵</span>
+                                    <div class="label">Very Confused</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment">Additional Comments (Optional)</label>
+                            <textarea id="comment" class="comment-box" placeholder="Share your thoughts, suggestions, or questions..."></textarea>
+                        </div>
+
+                        <div style="text-align: center;">
+                            <button class="btn btn-primary" onclick="submitFeedback()">🚀 Submit Feedback</button>
+                        </div>
+                    </div>
+
+                    <div id="thankYou" style="display: none; text-align: center; padding: 40px;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
+                        <h3 style="color: #667eea;">Thank You!</h3>
+                        <p>Your feedback has been submitted successfully.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics -->
+            <div id="analytics" class="tab-pane">
+                <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">📈 Historical Analytics</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalSessions">12</div>
+                        <div class="stat-label">Total Sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalStudentResponses">847</div>
+                        <div class="stat-label">Student Responses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgSessionRating">4.2</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="improvementRate">+15%</div>
+                        <div class="stat-label">Improvement Rate</div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h4>📊 Weekly Performance Trends</h4>
+                        <canvas id="weeklyChart" width="300" height="300"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h4>📈 Subject-wise Understanding</h4>
+                        <canvas id="subjectChart" width="300" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
