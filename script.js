@@ -664,3 +664,50 @@ window.feedbackSystem = {
     getFeedbackData: () => feedbackData,
     switchTab: switchTab
 };
+
+//here started extra
+// Teacher starts a session
+async function startSession() {
+    const subject = document.getElementById("subject").value;
+    const teacher = document.getElementById("teacher").value;
+    const topic = document.getElementById("topic").value;
+
+    const res = await fetch("http://localhost:5000/create-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject, teacher, topic })
+    });
+
+    const data = await res.json();
+    alert("Session started! Session ID: " + data._id);
+
+    // Create feedback link
+    const link = `http://localhost:5000/feedback.html?sessionId=${data._id}`;
+
+    // Clear old QR (if any)
+    document.getElementById("qrDisplay").innerHTML = "";
+
+    // Generate QR Code
+    new QRCode(document.getElementById("qrDisplay"), {
+        text: link,
+        width: 200,
+        height: 200
+    });
+}
+
+// Student submits feedback
+async function submitFeedback(sessionId, rating) {
+    await fetch("http://localhost:5000/submit-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, rating })
+    });
+    alert("Feedback submitted!");
+}
+
+// Teacher checks analytics
+async function loadAnalytics(sessionId) {
+    const res = await fetch(`http://localhost:5000/analytics/${sessionId}`);
+    const data = await res.json();
+    alert(`Total Responses: ${data.totalResponses}, Avg Rating: ${data.avgRating}`);
+}

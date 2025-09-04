@@ -8,11 +8,15 @@
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
     
     <!-- Custom Styles -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="qrcode" style="margin-top:20px;"></div>
+
     <div class="container">
         <div class="header">
             <h1>🎓 Real-Time Classroom Feedback</h1>
@@ -120,29 +124,30 @@
                     <div class="form-group">
                         <label for="sessionInput">Session ID (or scan QR code)</label>
                         <input type="text" id="sessionInput" class="form-control" placeholder="Enter session ID">
+                        <button class="btn btn-secondary" onclick="showFeedbackForm()">Join Session</button>
                     </div>
 
                     <div id="feedbackSection" style="display: none;">
                         <div class="form-group">
                             <label>How well did you understand today's topic?</label>
                             <div class="rating-options">
-                                <div class="rating-option" data-rating="5">
+                                <div class="rating-option" data-rating="5" onclick="setRating(5)">
                                     <span class="emoji">😍</span>
                                     <div class="label">Perfectly Clear</div>
                                 </div>
-                                <div class="rating-option" data-rating="4">
+                                <div class="rating-option" data-rating="4" onclick="setRating(4)">
                                     <span class="emoji">😊</span>
                                     <div class="label">Well Understood</div>
                                 </div>
-                                <div class="rating-option" data-rating="3">
+                                <div class="rating-option" data-rating="3" onclick="setRating(3)">
                                     <span class="emoji">🙂</span>
                                     <div class="label">Partially Clear</div>
                                 </div>
-                                <div class="rating-option" data-rating="2">
+                                <div class="rating-option" data-rating="2" onclick="setRating(2)">
                                     <span class="emoji">😕</span>
                                     <div class="label">Somewhat Confused</div>
                                 </div>
-                                <div class="rating-option" data-rating="1">
+                                <div class="rating-option" data-rating="1" onclick="setRating(1)">
                                     <span class="emoji">😵</span>
                                     <div class="label">Very Confused</div>
                                 </div>
@@ -151,7 +156,7 @@
 
                         <div class="form-group">
                             <label for="comment">Additional Comments (Optional)</label>
-                            <textarea id="comment" class="comment-box" placeholder="Share your thoughts, suggestions, or questions..."></textarea>
+                            <textarea id="comment" class="comment-box" placeholder="Share your thoughts..."></textarea>
                         </div>
 
                         <div style="text-align: center;">
@@ -171,22 +176,23 @@
             <div id="analytics" class="tab-pane">
                 <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">📈 Historical Analytics</h2>
                 
+                <div class="form-group" style="text-align:center;">
+                    <input type="text" id="analyticsSessionId" class="form-control" placeholder="Enter Session ID">
+                    <button class="btn btn-primary" onclick="loadAnalytics(document.getElementById('analyticsSessionId').value)">View Analytics</button>
+                </div>
+
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-number" id="totalSessions">12</div>
+                        <div class="stat-number" id="totalSessions">0</div>
                         <div class="stat-label">Total Sessions</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="totalStudentResponses">847</div>
+                        <div class="stat-number" id="totalStudentResponses">0</div>
                         <div class="stat-label">Student Responses</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="avgSessionRating">4.2</div>
+                        <div class="stat-number" id="avgSessionRating">0</div>
                         <div class="stat-label">Average Rating</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="improvementRate">+15%</div>
-                        <div class="stat-label">Improvement Rate</div>
                     </div>
                 </div>
 
