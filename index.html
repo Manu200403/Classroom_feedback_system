@@ -104,12 +104,28 @@
         <h2 style="text-align:center;color:#667eea;margin-bottom:30px;">📈 Historical Analytics</h2>
         <div class="form-group" style="text-align:center;">
           <input type="text" id="analyticsSessionId" class="form-control" placeholder="Enter Session ID"/>
-          <button class="btn btn-primary" onclick="loadAnalytics(document.getElementById('analyticsSessionId').value)">View Analytics</button>
+          <button class="btn btn-primary" onclick="loadAnalytics()">View Analytics</button>
         </div>
+        
         <div class="stats-grid">
           <div class="stat-card"><div class="stat-number" id="totalSessions">0</div><div class="stat-label">Total Sessions</div></div>
           <div class="stat-card"><div class="stat-number" id="totalStudentResponses">0</div><div class="stat-label">Student Responses</div></div>
           <div class="stat-card"><div class="stat-number" id="avgSessionRating">0</div><div class="stat-label">Average Rating</div></div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-container">
+          <div class="chart-card">
+            <canvas id="ratingChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <canvas id="trendChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="chart-card" style="margin-top:20px;">
+          <div id="feedbackComments"></div>
         </div>
       </div>
 
