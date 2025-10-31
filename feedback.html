@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Session Feedback</h1>
+        <div id="feedbackSection">
+            <p>Rate your experience:</p>
+            <div class="rating-options">
+                <span class="rating-option" data-rating="1" onclick="setRating(1)">😡</span>
+                <span class="rating-option" data-rating="2" onclick="setRating(2)">😕</span>
+                <span class="rating-option" data-rating="3" onclick="setRating(3)">😐</span>
+                <span class="rating-option" data-rating="4" onclick="setRating(4)">🙂</span>
+                <span class="rating-option" data-rating="5" onclick="setRating(5)">😍</span>
+            </div>
+            <textarea id="comment" placeholder="Write your feedback..."></textarea>
+            <button onclick="submitFeedback()">Submit Feedback</button>
+        </div>
+        <div id="thankYou" style="display: none;">
+            <h2>Thank you for your feedback! 💬</h2>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
